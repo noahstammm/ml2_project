@@ -200,7 +200,93 @@ predictions = predict_class(model_best, images, True)
 for prediction in predictions:
     print(prediction)
 ```
+## Visualisation
 
+### Confusion Matrix
+This code snippet demonstrates how to calculate and visualize the confusion matrix for a trained model. The confusion matrix is a useful tool for evaluating the performance of a classification model.
+
+First, the trained model is loaded using the load_model function. The model should be saved in the HDF5 format.
+
+Next, predictions are generated for both the training and test sets using the predict_generator function. This function takes in a data generator (e.g., train_generator and validation_generator) and produces predictions for each batch of data.
+
+After obtaining the predicted labels and true labels for both sets, the confusion matrix is computed using the confusion_matrix function from the scikit-learn library. The confusion matrix provides a tabular representation of the model's performance, showing the number of true positive, true negative, false positive, and false negative predictions for each class.
+
+Finally, the confusion matrices are visualized using heatmaps created with the seaborn library. The heatmaps display the confusion matrices with annotations and color-coding to provide a clear representation of the distribution of predictions across different classes.
+```
+import numpy as np
+from sklearn.metrics import confusion_matrix
+import seaborn as sns
+
+# Load the trained model
+model = load_model('model_trained_3class.hdf5')
+
+# Get the predictions for the training set
+train_predictions = model.predict_generator(train_generator)
+train_labels = train_generator.classes
+
+# Get the predictions for the test set
+test_predictions = model.predict_generator(validation_generator)
+test_labels = validation_generator.classes
+
+# Calculate the confusion matrix for the training set
+train_cm = confusion_matrix(train_labels, np.argmax(train_predictions, axis=1))
+plt.figure(figsize=(8, 6))
+sns.heatmap(train_cm, annot=True, cmap="Blues", fmt="d", xticklabels=train_generator.class_indices.keys(), yticklabels=train_generator.class_indices.keys())
+plt.xlabel('Predicted')
+plt.ylabel('True')
+plt.title('Confusion Matrix - Training Set')
+plt.show()
+
+# Calculate the confusion matrix for the test set
+test_cm = confusion_matrix(test_labels, np.argmax(test_predictions, axis=1))
+plt.figure(figsize=(8, 6))
+sns.heatmap(test_cm, annot=True, cmap="Blues", fmt="d", xticklabels=validation_generator.class_indices.keys(), yticklabels=validation_generator.class_indices.keys())
+plt.xlabel('Predicted')
+plt.ylabel('True')
+plt.title('Confusion Matrix - Test Set')
+plt.show()
+
+
+```
+### Plotting Accuracy and Loss Curves
+This code snippet provides two functions, plot_accuracy and plot_loss, to visualize the training and validation accuracy as well as the training and validation loss over epochs.
+
+plot_accuracy Function:
+Plots the training and validation accuracy curves.
+Takes the history object, which contains the recorded accuracy values during training, as well as a title parameter for the title of the plot.
+Displays the plot with the training and validation accuracy curves.
+The y-axis represents the accuracy values, while the x-axis represents the epochs.
+The legend indicates the training accuracy and validation accuracy curves.
+The x-axis labels are adjusted to show every 6 epochs for better readability.
+plot_loss Function:
+Plots the training and validation loss curves.
+Takes the history object, which contains the recorded loss values during training, as well as a title parameter for the title of the plot.
+Displays the plot with the training and validation loss curves.
+The y-axis represents the loss values, while the x-axis represents the epochs.
+The legend indicates the training loss and validation loss curves.
+These functions can be used to visualize the performance of a trained model by examining the accuracy and loss trends over epochs. By analyzing these curves, you can assess the model's learning progress and identify potential overfitting or underfitting issues.
+
+To use these functions, pass the history object, which is typically obtained from the fit() function when training a model, and provide a meaningful title for each plot.
+
+```
+def plot_accuracy(history,title):
+    plt.title(title)
+    plt.plot(history.history['accuracy'])
+    plt.plot(history.history['val_accuracy'])
+    plt.ylabel('accuracy')
+    plt.xlabel('epoch')
+    plt.legend(['train_accuracy', 'validation_accuracy'], loc='best')
+    plt.xticks(range(0, len(history.history['accuracy'])+1, 6))  # Adjustment of the step size of the x-axis
+    plt.show()
+def plot_loss(history,title):
+    plt.title(title)
+    plt.plot(history.history['loss'])
+    plt.plot(history.history['val_loss'])
+    plt.ylabel('loss')
+    plt.xlabel('epoch')
+    plt.legend(['train_loss', 'validation_loss'], loc='best')
+    plt.show()
+```
 ## After the training we use GPT 
 
 After the training and validation of the model I used the output to get some more information about the food like the nutritional values and some recipes for the predicted food. So the goal was to have one model which detects the food and then to use gpt for some futher information.
