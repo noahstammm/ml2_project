@@ -287,6 +287,9 @@ def plot_loss(history,title):
     plt.legend(['train_loss', 'validation_loss'], loc='best')
     plt.show()
 ```
+## Interpretation of the model
+After training the model and testing it with accuracy and a confusion matrix, it became apparent that the model performed best after 2 and 5 epochs. After 3 epochs, for example, the accuracy decreased again, especially in the validation set. This can also be seen very well when the whole thing is shown in a plot. It can be seen very clearly that the results perform best at 2 epochs and at 5 epochs. It also shows that the model is most robust with this number of epochs, because otherwise the model is very poor at predicting non-training data. However, the model still has some room for improvement, which is also evident when looking at the confusion matrix, which shows that a few images are still not classified correctly. In order to achieve an improvement, there are different approaches, such as improving the data, more data for the respective classes, changing the layers in the model itself, regularization techniques or changing the hyperparameters. 
+
 ## After the training we use GPT 
 
 After the training and validation of the model I used the output to get some more information about the food like the nutritional values and some recipes for the predicted food. So the goal was to have one model which detects the food and then to use gpt for some futher information.
