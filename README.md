@@ -1,6 +1,7 @@
 # ml2_project
+The aim of this small project is to recognise photos of different dishes or food. This means that if you have a photo of a food and you don't know exactly what kind of food it is, you can use the model to find out what it is in the photo. This prediction of the food is then enhanced by additional information on the nutritional values and recipe suggestions. Thus, it can also be used to quickly and easily find recipe suggestions and nutritional values.  
 
-This repository contains a trained model for a three-class image classification in this specific task. You could extend the model with the other 98 classes of food but due to the limited ressources I would suggest to use only three classes and if you are familiar with the notebook and have the ressources feel free to extend the model-classes.Of course you could reduce the images per class but I decided to use three classes with all the availiable images. The model was trained using TensorFlow and Keras. The purpose of this README file is to provide an overview of the model and how it was trained. 
+This repository contains a trained model for a three-class image classification in this specific task. You could extend the model with the other 98 classes of food but due to the limited ressources I would suggest to use only three classes and if you are familiar with the notebook and have the ressources feel free to extend the model-classes. Of course you could reduce the images per class but I decided to use three classes with all the availiable images. The model was trained using TensorFlow and Keras. The purpose of this README file is to provide an overview of the model and how it was trained. 
 
 ## Installation
 First, you've to import the following packages:
@@ -56,7 +57,7 @@ def get_data_extract():
 
 get_data_extract()
 ```
-Note: That the code above contains not all the steps for preparing the data.
+Note: That the code above contains not all the steps for preparing the data. For further information see the notebook
 
 ## Model Architecture:
 
@@ -98,7 +99,7 @@ Saving the Model:
 
 The trained model was saved in the HDF5 file format with the name 'model_trained_3class.hdf5'. The model weights were saved during training if they showed improvement on the validation set using the ModelCheckpoint callback.
 
-Please note that I have used different layers and number of epochs and have had the best results with these layers and either 2 or 5 epochs of training. The highest number of epochs with which I trained the model was 5, as one epoch is already very time intensive. But feel free to increase the number of epochs to probablly achieve an even better result.
+Please note that I have used different layers and number of epochs and have had the best results with these layers and either 2 or 5 epochs of training. The highest number of epochs with which I trained the model was 5, as one epoch is already very time intensive. But feel free to increase the number of epochs to probably achieve an even better result.
 
 ## Training History:
 
@@ -288,7 +289,11 @@ def plot_loss(history,title):
     plt.show()
 ```
 ## Interpretation of the model
-After training the model and testing it with accuracy and a confusion matrix, it became apparent that the model performed best after 2 and 5 epochs. After 3 epochs, for example, the accuracy decreased again, especially in the validation set. This can also be seen very well when the whole thing is shown in a plot. It can be seen very clearly that the results perform best at 2 epochs and at 5 epochs. It also shows that the model is most robust with this number of epochs, because otherwise the model is very poor at predicting non-training data. However, the model still has some room for improvement, which is also evident when looking at the confusion matrix, which shows that a few images are still not classified correctly. In order to achieve an improvement, there are different approaches, such as improving the data, more data for the respective classes, changing the layers in the model itself, regularization techniques or changing the hyperparameters. 
+After training the model and testing it with accuracy and a confusion matrix, it showed that the model performed best after 2 and 5 epochs. From the first to the second epoch, the result or accuracy improved for both the training data set and the validation data set. After that, however, it deteriorated again until the fifth epoch. This can also be seen very well if you plot the whole thing. It is very clear to see that the results are best at 2 epochs and at 5 epochs. It also shows that the model is most robust at this number of epochs, as the model is otherwise very poor at predicting non-training data. This suggests that the model overfitted in this case. However, the model still has room for improvement, which can be seen in the confusion matrix, which shows that some images are still not classified correctly. Also, it has been shown that the model performance improved when I added an additional hidden layer with a leaky relu activation function and another dropout layer with a dropout rate of 0.3. 
+
+To achieve further improvement, there are several approaches, such as improving the data, adding more data for the respective classes, changing the layers in the model itself, adding additional layers, using other regularisation techniques, adjusting the data augmentation, even though ImageDataGenerator is already used, the parameter settings could have been further adjusted or additional augmentation techniques could have been used, changing the number of neurons per layer, changing the learning rate or the batch size.
+
+There are many different factors that could lead to an even better result, but due to time constraints I could not try everything, as the training took several hours each time.
 
 ## After the training we use GPT 
 
@@ -375,7 +380,7 @@ print(generated_text)
 ### Use gpt for the nutritional values
 But here, too, the answer remained very matter-of-fact. I have found that when a very simple question is asked without much context, the answer is sarcastic, but not for such a specific question as: Can you give me a recipe for the following foodstuff?
 
-In order to get an appropriate sarcastic answer for every question, I would either have to finetune gpt or directly train a model from scratch in sarcasm.
+In order to get an appropriate sarcastic answer for every question, my approach would be to either fine tune gpt or directly train a model from scratch in sarcasm.
 
 To finish the project, I asked GPT one more time for the nutritional values.
 ```
